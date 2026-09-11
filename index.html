@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080b14">
+<meta name="description" content="MundoPlay — entretenimiento gratuito con TV en vivo y catálogo de contenido legal/gratuito.">
+<title>MundoPlay — TV en vivo & entretenimiento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+<style>
+:root{--bg:#070910;--panel:#101521;--panel2:#151b2a;--text:#f7f8fb;--muted:#98a1b3;--line:#252c3b;--accent:#7c5cff;--accent2:#19d3ae;--danger:#ff5f6d;--shadow:0 18px 60px #0008}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#33237a33,transparent 65%),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+button,input,select{font:inherit}.app{min-height:100vh}.topbar{position:sticky;top:0;z-index:30;backdrop-filter:blur(18px);background:#070910d9;border-bottom:1px solid #ffffff0d;padding:12px 20px}
+.nav{max-width:1500px;margin:auto;display:flex;align-items:center;gap:18px}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;white-space:nowrap}.logo{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--accent),#22d3ee);display:grid;place-items:center;box-shadow:0 8px 30px #7c5cff55}.logo:after{content:"▶";font-size:14px}
+.navlinks{display:flex;gap:4px}.navlinks button,.iconbtn,.ghost{background:transparent;border:0;color:var(--muted);padding:10px 12px;border-radius:10px;cursor:pointer}.navlinks button.active,.navlinks button:hover,.iconbtn:hover,.ghost:hover{background:#ffffff0a;color:var(--text)}
+.search{margin-left:auto;position:relative}.search input{width:min(300px,30vw);background:#111622;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:11px 14px 11px 38px;outline:0}.search span{position:absolute;left:13px;top:10px;color:var(--muted)}
+.hero{max-width:1500px;margin:0 auto;padding:52px 20px 30px;display:grid;grid-template-columns:1.25fr .75fr;gap:28px;align-items:center}.hero h1{font-size:clamp(38px,6vw,78px);line-height:.96;margin:0 0 20px;letter-spacing:-.055em}.hero h1 span{background:linear-gradient(90deg,#fff,var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);max-width:680px;font-size:17px;line-height:1.7}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.primary{border:0;border-radius:12px;background:linear-gradient(135deg,var(--accent),#5b8cff);color:#fff;padding:13px 18px;font-weight:700;cursor:pointer;box-shadow:0 12px 35px #7c5cff33}.secondary{border:1px solid var(--line);border-radius:12px;background:#111622;color:#fff;padding:13px 18px;font-weight:600;cursor:pointer}.hero-card{background:linear-gradient(145deg,#151a2a,#0e131e);border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:var(--shadow);min-height:280px}.live-dot{display:inline-flex;align-items:center;gap:8px;color:#ff8f99;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}.live-dot i{width:8px;height:8px;background:#ff5f6d;border-radius:50%;box-shadow:0 0 0 6px #ff5f6d18}.hero-stat{display:flex;justify-content:space-between;align-items:end;margin-top:60px}.hero-stat strong{font-size:46px;letter-spacing:-.04em}.hero-stat small{color:var(--muted)}
+main{max-width:1500px;margin:auto;padding:0 20px 60px}.section{margin-top:32px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:15px}.section-head h2{margin:0;font-size:21px}.section-head p{margin:4px 0 0;color:var(--muted);font-size:13px}.filters{display:flex;gap:8px;overflow:auto;padding-bottom:4px}.chip{border:1px solid var(--line);background:#0e131e;color:var(--muted);border-radius:999px;padding:8px 13px;cursor:pointer;white-space:nowrap}.chip.active,.chip:hover{background:#7c5cff20;border-color:#7c5cff66;color:#fff}
+.countrygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:9px;max-height:310px;overflow:auto;padding-right:4px}.country{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:#0d121c;color:#fff;border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left}.country:hover,.country.active{border-color:#7c5cff66;background:#7c5cff12}.flag{font-size:20px}.country small{display:block;color:var(--muted);margin-top:2px}
+.channelgrid,.catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}.card{border:1px solid var(--line);background:linear-gradient(180deg,#111725,#0d121c);border-radius:16px;overflow:hidden;transition:.2s;min-width:0}.card:hover{transform:translateY(-3px);border-color:#ffffff22;box-shadow:0 14px 40px #0005}.thumb{aspect-ratio:16/9;background:#080b12;display:grid;place-items:center;position:relative}.thumb img{width:100%;height:100%;object-fit:contain;padding:14px}.play{position:absolute;right:10px;bottom:10px;width:38px;height:38px;border-radius:50%;border:1px solid #ffffff22;background:#070910d9;color:#fff;cursor:pointer}.cardbody{padding:12px}.title{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{font-size:12px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.empty{padding:35px;border:1px dashed var(--line);border-radius:16px;color:var(--muted);text-align:center;grid-column:1/-1}
+.catalog .poster{aspect-ratio:2/3;background:linear-gradient(135deg,#171d2b,#0c1019);display:grid;place-items:center;overflow:hidden}.poster img{width:100%;height:100%;object-fit:cover}.catalog .card{cursor:pointer}
+.modal{position:fixed;inset:0;background:#000b;z-index:100;display:none;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.dialog{width:min(1050px,100%);background:#0c111b;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}.dialoghead{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border-bottom:1px solid var(--line)}.dialoghead strong{font-size:15px}.close{border:0;background:#ffffff0a;color:#fff;border-radius:10px;width:36px;height:36px;cursor:pointer}.video-wrap{background:#000;aspect-ratio:16/9;display:grid;place-items:center}.video-wrap video{width:100%;height:100%;display:block}.status{padding:12px 15px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+.toast{position:fixed;right:18px;bottom:18px;z-index:200;background:#121927;border:1px solid var(--line);border-radius:12px;padding:12px 15px;box-shadow:var(--shadow);display:none}.toast.show{display:block}
+footer{border-top:1px solid var(--line);color:var(--muted);padding:25px 20px;font-size:12px;text-align:center}.hide{display:none!important}
+@media(max-width:900px){.hero{grid-template-columns:1fr}.hero-card{display:none}.navlinks{display:none}.search{margin-left:auto}.search input{width:42vw}}
+@media(max-width:560px){.topbar{padding:10px}.nav{gap:8px}.brand{font-size:17px}.search input{width:45vw}.hero{padding-top:35px}.channelgrid,.catalog{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.countrygrid{grid-template-columns:repeat(2,minmax(0,1fr))}.cardbody{padding:9px}.hero h1{font-size:42px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar"><nav class="nav">
+  <div class="brand"><div class="logo"></div>MundoPlay</div>
+  <div class="navlinks">
+    <button class="active" data-scroll="inicio">Inicio</button><button data-scroll="tv">TV en vivo</button><button data-scroll="catalogo">Películas y series</button>
+  </div>
+  <div class="search"><span>⌕</span><input id="search" placeholder="Buscar canal o país…" autocomplete="off"></div>
+</nav></header>
+
+<section class="hero" id="inicio">
+  <div><div class="live-dot"><i></i> entretenimiento global</div>
+    <h1>Tu pantalla.<br><span>Todo el mundo.</span></h1>
+    <p>Una web app ligera y multiplataforma para descubrir canales de TV disponibles públicamente, además de accesos a catálogos gratuitos y legales.</p>
+    <div class="actions"><button class="primary" onclick="document.getElementById('tv').scrollIntoView()">Ver TV en vivo</button><button class="secondary" onclick="document.getElementById('catalogo').scrollIntoView()">Explorar catálogo</button></div>
+  </div>
+  <div class="hero-card"><div class="live-dot"><i></i> datos en directo</div><div class="hero-stat"><div><strong id="channelCount">—</strong><br><small>canales encontrados</small></div><div style="text-align:right"><strong id="countryCount">—</strong><br><small>países disponibles</small></div></div><p style="margin-top:25px">Los streams se cargan desde fuentes públicas externas. La disponibilidad puede variar por país, operador, geobloqueo o cambios del proveedor.</p></div>
+</section>
+
+<div id="localWarning" class="hide" style="max-width:1500px;margin:10px auto 0;padding:0 20px">
+  <div style="border:1px solid #7c5cff55;background:#7c5cff10;color:#dcd7ff;padding:13px 15px;border-radius:12px;font-size:13px">
+    <b>Estás abriendo el archivo directamente.</b> Para que TV en vivo funcione correctamente, súbelo a GitHub Pages y abre la dirección <code>https://...github.io/...</code>.
+  </div>
+</div>
+<main>
+<section class="section" id="tv">
+ <div class="section-head"><div><h2>TV en vivo</h2><p>Selecciona un país y reproduce una señal pública disponible.</p></div><button class="ghost" id="refresh">↻ Actualizar</button></div>
+ <div class="filters"><button class="chip active" data-region="all">Todos</button><button class="chip" data-region="amer">Américas</button><button class="chip" data-region="eur">Europa</button><button class="chip" data-region="asia">Asia</button><button class="chip" data-region="afr">África</button></div>
+ <div class="countrygrid" id="countries"><div class="empty">Cargando países…</div></div>
+ <div class="section-head" style="margin-top:24px"><div><h2 id="selectedTitle">Canales destacados</h2><p id="selectedHint">Elige un país para cargar sus canales.</p></div></div>
+ <div class="channelgrid" id="channels"><div class="empty">Cargando…</div></div>
+</section>
+
+<section class="section" id="catalogo">
+ <div class="section-head"><div><h2>Películas y series gratuitas</h2><p>Accesos a servicios y catálogos que ofrecen contenido gratuito de forma legal.</p></div></div>
+ <div class="catalog" id="catalog"></div>
+</section>
+</main>
+
+<footer>MundoPlay es una interfaz independiente. No aloja ni retransmite contenido propio de terceros. Verifica los derechos y las condiciones de uso de cada fuente antes de publicar tu instancia.</footer>
+</div>
+
+<div class="modal" id="playerModal"><div class="dialog">
+ <div class="dialoghead"><strong id="playerTitle">Reproductor</strong><button class="close" onclick="closePlayer()">×</button></div>
+ <div class="video-wrap"><video id="video" controls playsinline autoplay></video></div>
+ <div class="status" id="playerStatus">Preparando reproducción…</div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API='https://iptv-org.github.io/api';
+const IPTV='https://iptv-org.github.io/iptv';
+let countries=[], currentCountry=null, channels=[], hls=null;
+
+const catalog=[
+ {title:'Internet Archive',meta:'Películas y material de archivo gratuito',emoji:'🎞️',url:'https://archive.org/details/movies'},
+ {title:'Pluto TV',meta:'TV en vivo y contenido gratuito',emoji:'📺',url:'https://pluto.tv/'},
+ {title:'Tubi',meta:'Películas y series gratuitas donde esté disponible',emoji:'🍿',url:'https://tubitv.com/'},
+ {title:'Plex Free Movies & TV',meta:'Películas, series y canales gratuitos',emoji:'🎬',url:'https://www.plex.tv/watch-free-tv/'},
+ {title:'YouTube Movies',meta:'Catálogo oficial; disponibilidad según país',emoji:'▶️',url:'https://www.youtube.com/movies'}
+];
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),3200)}
+function parseM3U(text){
+ const lines=text.split(/\r?\n/), out=[]; let info=null;
+ for(const line of lines){const l=line.trim(); if(l.startsWith('#EXTINF')){info=l}else if(l&&!l.startsWith('#')&&info){
+   const name=(info.match(/,(.*)$/)||[])[1]||'Canal'; const logo=(info.match(/tvg-logo="([^"]*)"/)||[])[1]||'';
+   out.push({name:name.trim(),logo,url:l}); info=null;
+ }}
+ return out;
+}
+async function fetchJSON(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);return r.json()}
+async function loadCountries(){
+ try{
+   const data=await fetchJSON(API+'/countries.json');
+   countries=(Array.isArray(data)?data:[])
+     .map(c=>({name:c.name||c.code,code:(c.code||'').toUpperCase(),flag:c.flag||'🌐'}))
+     .filter(c=>c.code);
+   document.getElementById('countryCount').textContent=countries.length;
+   renderCountries(countries);
+   const saved=localStorage.getItem('mundoplay-country')||'CR';
+   const preferred=countries.find(c=>c.code===saved)||countries.find(c=>c.code==='CR')||countries[0];
+   if(preferred) await selectCountry(preferred);
+ }catch(e){
+   console.error('MundoPlay countries error:',e);
+   document.getElementById('countries').innerHTML='<div class="empty">No se pudo conectar con la fuente de países. Recarga la página.</div>';
+   document.getElementById('channels').innerHTML='<div class="empty">Esperando conexión con la fuente de TV.</div>';
+ }
+}
+
+function renderCountries(list){
+ const q=(document.getElementById('search').value||'').toLowerCase().trim();
+ const arr=list.filter(c=>!q||c.name.toLowerCase().includes(q)||c.code.toLowerCase()===q);
+ document.getElementById('countries').innerHTML=arr.map(c=>`
+   <button class="country ${currentCountry?.code===c.code?'active':''}" data-country="${esc(c.code)}">
+     <span class="flag">${c.flag}</span>
+     <span>${esc(c.name)}<small>${esc(c.code)}</small></span>
+   </button>`).join('')||'<div class="empty">No se encontraron países.</div>';
+
+ document.querySelectorAll('[data-country]').forEach(btn=>{
+   btn.addEventListener('click',()=>{
+     const country=countries.find(x=>x.code===btn.dataset.country);
+     if(country) selectCountry(country);
+   });
+ });
+}
+
+async function selectCountry(c){
+ if(!c)return;
+ currentCountry=c;
+ localStorage.setItem('mundoplay-country',c.code);
+ renderCountries(countries);
+
+ document.getElementById('selectedTitle').textContent=`Canales de ${c.flag} ${c.name}`;
+ document.getElementById('selectedHint').textContent='Cargando canales…';
+ document.getElementById('channels').innerHTML='<div class="empty">Cargando señales públicas…</div>';
+
+ try{
+   const response=await fetch(`${IPTV}/countries/${c.code.toLowerCase()}.m3u`,{cache:'no-store'});
+   if(!response.ok) throw new Error('Playlist HTTP '+response.status);
+   const text=await response.text();
+
+   channels=parseM3U(text)
+     .filter(x=>x.url && /^https?:\/\//i.test(x.url))
+     .map(x=>({...x,label:'Fuente pública'}));
+
+   document.getElementById('channelCount').textContent=channels.length;
+   renderChannels(channels);
+   document.getElementById('selectedHint').textContent =
+     channels.length
+       ? `${channels.length} señales listadas. Algunas pueden no estar disponibles en tu país.`
+       : 'Este país no tiene señales listadas actualmente.';
+ }catch(e){
+   console.error('MundoPlay playlist error:',e);
+   channels=[];
+   renderChannels([]);
+   document.getElementById('selectedHint').textContent='No hay una playlist pública disponible para este país en este momento.';
+ }
+}
+
+function renderChannels(list){
+ const q=(document.getElementById('search').value||'').toLowerCase().trim();
+ const arr=list.filter(x=>!q||x.name.toLowerCase().includes(q)).slice(0,240);
+ document.getElementById('channels').innerHTML=arr.map((x,i)=>`
+   <article class="card">
+    <div class="thumb">
+      ${x.logo?`<img loading="lazy" src="${esc(x.logo)}" alt="" onerror="this.style.display='none'">`:'<span style="font-size:32px">📺</span>'}
+      <button class="play" data-play="${i}" title="Reproducir">▶</button>
+    </div>
+    <div class="cardbody">
+      <div class="title">${esc(x.name)}</div>
+      <div class="meta">${esc(x.quality||'TV en vivo')} · ${esc(x.label||'Disponible')}</div>
+    </div>
+   </article>`).join('')||'<div class="empty">No se encontraron canales compatibles.</div>';
+ document.querySelectorAll('[data-play]').forEach(btn=>{
+   btn.addEventListener('click',()=>playChannel(arr[Number(btn.dataset.play)]));
+ });
+}
+
+function playChannel(ch){
+ const modal=document.getElementById('playerModal'), video=document.getElementById('video'), status=document.getElementById('playerStatus');
+ document.getElementById('playerTitle').textContent=ch.name;
+ status.innerHTML=`${esc(ch.label||'Señal')} · ${esc(ch.quality||'calidad automática')} · puntuación ${Number(ch.score)||0}`;
+ modal.classList.add('open');
+ if(hls){hls.destroy();hls=null}
+ video.pause(); video.removeAttribute('src'); video.load();
+ const url=ch.url;
+
+ const fail=()=>{
+   status.textContent='El servidor rechazó la reproducción dentro del navegador. Puedes intentar abrir la señal directamente.';
+ };
+
+ if(window.Hls && Hls.isSupported()){
+   hls=new Hls({enableWorker:true,lowLatencyMode:true,maxBufferLength:30});
+   hls.loadSource(url);
+   hls.attachMedia(video);
+   hls.on(Hls.Events.MANIFEST_PARSED,()=>{
+     status.textContent='Señal conectada.';
+     video.play().catch(()=>{status.textContent='Señal conectada. Pulsa ▶ para iniciar.'});
+   });
+   hls.on(Hls.Events.ERROR,(ev,data)=>{
+     if(data.fatal){status.textContent='Esta señal no permite reproducción embebida en este navegador.';setTimeout(fail,250)}
+   });
+ }else if(video.canPlayType('application/vnd.apple.mpegurl')){
+   video.src=url;
+   video.addEventListener('loadedmetadata',()=>video.play().catch(()=>{}),{once:true});
+   video.addEventListener('error',fail,{once:true});
+ }else{
+   fail();
+ }
+}
+
+function closePlayer(){document.getElementById('playerModal').classList.remove('open');if(hls){hls.destroy();hls=null}const v=document.getElementById('video');v.pause();v.removeAttribute('src');v.load()}
+document.getElementById('playerModal').addEventListener('click',e=>{if(e.target.id==='playerModal')closePlayer()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePlayer()});
+document.getElementById('refresh').onclick=()=>currentCountry&&selectCountry(currentCountry);
+document.getElementById('search').addEventListener('input',()=>{renderCountries(countries);renderChannels(channels)});
+document.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.scroll).scrollIntoView());
+document.querySelectorAll('[data-region]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-region]').forEach(x=>x.classList.remove('active'));b.classList.add('active');/* country dataset is intentionally left global; playlists are the source of truth */});
+document.getElementById('catalog').innerHTML=catalog.map(x=>`<article class="card" onclick="window.open('${x.url}','_blank','noopener,noreferrer')"><div class="poster"><span style="font-size:52px">${x.emoji}</span></div><div class="cardbody"><div class="title">${esc(x.title)}</div><div class="meta">${esc(x.meta)}</div></div></article>`).join('');
+if(location.protocol==='file:')document.getElementById('localWarning').classList.remove('hide');
+loadCountries();
+</script>
+</body>
+</html>
