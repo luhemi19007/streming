@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAHM TV - Entretenimiento Global</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --accent-color: #38bdf8;
+            --text-color: #f8fafc;
+            --text-secondary: #94a3b8;
+            --danger-color: #ef4444;
+            --success-color: #22c55e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--surface-color);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: var(--text-color);
+            background-color: #334155;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-btn {
+            background-color: var(--surface-color);
+            border: 1px solid #334155;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border-color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px -10px rgba(56, 189, 248, 0.3);
+        }
+
+        .card-body {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .player-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background-color: #000;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .player-container.active {
+            display: block;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            background-color: rgba(34, 197, 94, 0.1);
+            color: var(--success-color);
+            width: fit-content;
+        }
+
+        .status-badge.offline {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: currentColor;
+        }
+
+        .back-btn-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-action {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action:hover {
+            opacity: 0.9;
+        }
+
+        .loading-state, .error-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <span class="logo-icon">📺</span>
+            <h1>LAHM TV</h1>
+        </div>
+        <nav>
+            <button class="nav-btn active" data-target="live-view">TV en vivo</button>
+            <button class="nav-btn" data-target="catalog-view">Catálogo</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- VISTA: TV EN VIVO -->
+        <section id="live-view" class="view-section active">
+            <div class="hero">
+                <h2>TV en Vivo Global</h2>
+                <p>Selecciona un canal para reproducir su señal pública disponible de forma estable.</p>
+            </div>
+
+            <div id="player-wrapper" class="player-container">
+                <video id="video-player" controls autoplay></video>
+            </div>
+
+            <div class="filter-container" id="continent-filters">
+                <button class="filter-btn active" data-continent="all">Todos</button>
+                <button class="filter-btn" data-continent="americas">Américas</button>
+                <button class="filter-btn" data-continent="europe">Europa</button>
+                <button class="filter-btn" data-continent="asia">Asia</button>
+                <button class="filter-btn" data-continent="africa">África</button>
+                <button class="filter-btn" data-continent="oceania">Oceanía</button>
+            </div>
+
+            <div id="channels-grid" class="grid">
+                <div class="loading-state">Cargando canales públicos de todo el mundo...</div>
+            </div>
+        </section>
+
+        <!-- VISTA: PELÍCULAS Y SERIES (CATÁLOGO) -->
+        <section id="catalog-view" class="view-section">
+            <div class="back-btn-container">
+                <button class="btn-action" id="back-to-home">
+                    ← Volver a LAHM TV
+                </button>
+            </div>
+            <div class="hero">
+                <h2>Películas y Series Gratuitas</h2>
+                <p>Plataformas y accesos que ofrecen contenido legal y gratuito sin costo oculto.</p>
+            </div>
+
+            <div class="grid" id="catalog-grid"></div>
+        </section>
+    </main>
+
+    <!-- HLS.js robusto mediante CDN oficial -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
+    <script>
+        // Base de datos completa con representación de canales estables de múltiples países de América y el mundo
+        const CHANNELS_DB = [
+            // Américas (Norte, Centro, Sur y Caribe)
+            { name: "NASA TV HD", continent: "americas", country: "Estados Unidos", url: "https://ntv1.nasa.gov/hls/live/511640/NASA-NTV1-HLS/master.m3u8", status: "online" },
+            { name: "TV Brasil", continent: "americas", country: "Brasil", url: "https://live-edge01.tele-global.net/hls/live/2092100/tvbrasil/index.m3u8", status: "online" },
+            { name: "Cámara de Diputados", continent: "americas", country: "México", url: "https://stream.camaradediputados.gob.mx/hls/livestream.m3u8", status: "online" },
+            { name: "Canal Congreso", continent: "americas", country: "Colombia", url: "https://59d33b432a106.streamlock.net/live/congreso1.smil/playlist.m3u8", status: "online" },
+            { name: "TV Perú", continent: "americas", country: "Perú", url: "https://cdnmx.frecuenciastreaming.com/tvperu/index.m3u8", status: "online" },
+            { name: "Televisión Nacional (TVN)", continent: "americas", country: "Chile", url: "https://tvn-live.hls.internapcdn.net/tvn/live/playlist.m3u8", status: "online" },
+            { name: "Canal 10", continent: "americas", country: "Uruguay", url: "https://edge-c10.stweb.tv/live/smil:canal10.smil/playlist.m3u8", status: "online" },
+            { name: "TV Pública", continent: "americas", country: "Argentina", url: "https://live-s3.tele-global.net/hls/live/2092101/tvpublica/index.m3u8", status: "online" },
+            { name: "Televisión de Asamblea", continent: "americas", country: "Costa Rica", url: "https://59c122822858d.streamlock.net/asamblea/asamblea.smil/playlist.m3u8", status: "online" },
+            { name: "Canal 12", continent: "americas", country: "El Salvador", url: "https://live.elsalvador.com/hls/canal12.m3u8", status: "online" },
+            { name: "TVN Canal 2", continent: "americas", country: "Panamá", url: "https://stream-tvn.medcom.gob.pa/hls/live/live.m3u8", status: "online" },
+            { name: "Televicentro Guatevision", continent: "americas", country: "Guatemala", url: "https://gt-s1.live.gt/guatevision/live/playlist.m3u8", status: "online" },
+            { name: "Televen", continent: "americas", country: "Venezuela", url: "https://streaming.televen.com/hls/televen.m3u8", status: "online" },
+            { name: "Ecuador TV", continent: "americas", country: "Ecuador", url: "https://streaming.rtve.gob.ec/hls/ecuadortv.m3u8", status: "online" },
+            { name: "Bolivia TV", continent: "americas", country: "Bolivia", url: "https://stream.boltv.bo/hls/live.m3u8", status: "online" },
+
+            // Europa
+            { name: "France 24 Español", continent: "europe", country: "Francia", url: "https://static.france24.com/live/F24_ES_HI_HLS/live_web.m3u8", status: "online" },
+            { name: "DW Español", continent: "europe", country: "Alemania", url: "https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8", status: "online" },
+            { name: "RTVE Play / Canal 24h", continent: "europe", country: "España", url: "https://rtvelive.akamaized.net/hls/live/2017409/24h_v1/master.m3u8", status: "online" },
+            { name: "Rai News 24", continent: "europe", country: "Italia", url: "https://rainews24live.akamaized.net/hls/live/614251/rainews24/rainews24_1/playlist.m3u8", status: "online" },
+            { name: "Swiss Info", continent: "europe", country: "Suiza", url: "https://srgssr-sfi-live.akamaized.net/hls/live/2030999/sfi_en/master.m3u8", status: "online" },
+
+            // Asia y Medio Oriente
+            { name: "NHK World Japan", continent: "asia", country: "Japón", url: "https://nhkworld.live-s.cdn.bitgravity.com/cdn-live/live/_definst_/content/nhkworld_1_hls/index.m3u8", status: "online" },
+            { name: "Al Jazeera English", continent: "asia", country: "Qatar", url: "https://live-hls-web-aje.getaj.net/AJE/index.m3u8", status: "online" },
+            { name: "TRT World", continent: "asia", country: "Turquía", url: "https://trtworld.rakuten.tv/v1/master/74d75d311fa673e1e5564cdcd8b1f5c6a1e36785/trt-world/master.m3u8", status: "online" },
+            { name: "Arirang TV", continent: "asia", country: "Corea del Sur", url: "https://amlivehls.akamaized.net/hls/live/2013063/arirang1/index.m3u8", status: "online" },
+
+            // África
+            { name: "SABC News", continent: "africa", country: "Sudáfrica", url: "https://sabc-sabcnews-1-ng.rakuten.tv/v1/master/74d75d311fa673e1e5564cdcd8b1f5c6a1e36785/sabc-sabcnews-1-ng/master.m3u8", status: "online" },
+
+            // Oceanía
+            { name: "ABC News Australia", continent: "oceania", country: "Australia", url: "https://abchls.akamaized.net/hls/live/2034426/abckids/master.m3u8", status: "online" }
+        ];
+
+        const CATALOG_DB = [
+            { name: "Pluto TV", desc: "Televisión gratuita con cientos de canales y películas bajo demanda.", url: "https://pluto.tv/" },
+            { name: "Tubi", desc: "Miles de películas y series gratuitas con anuncios legales.", url: "https://tubitv.com/" },
+            { name: "Rakuten TV (Gratis)", desc: "Sección gratuita de películas y documentales europeos.", url: "https://rakuten.tv/" },
+            { name: "Rlaxx TV", desc: "Servicio de streaming FAST gratuito multiplataforma.", url: "https://www.rlaxx.com/" },
+            { name: "Plex", desc: "Contenido gratuito con anuncios y televisión en vivo.", url: "https://www.plex.tv/" }
+        ];
+
+        let currentHls = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initNavigation();
+            loadChannels("all");
+            loadCatalog();
+        });
+
+        function initNavigation() {
+            const navButtons = document.querySelectorAll(".nav-btn");
+            const sections = document.querySelectorAll(".view-section");
+            const backBtn = document.getElementById("back-to-home");
+
+            navButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const targetId = btn.getAttribute("data-target");
+                    
+                    navButtons.forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+
+                    sections.forEach(sec => {
+                        sec.classList.remove("active");
+                        if (sec.id === targetId) {
+                            sec.classList.add("active");
+                        }
+                    });
+
+                    if (targetId !== "live-view") {
+                        stopVideoPlayer();
+                    }
+                });
+            });
+
+            if (backBtn) {
+                backBtn.addEventListener("click", () => {
+                    document.querySelector('[data-target="live-view"]').click();
+                });
+            }
+
+            const filterBtns = document.querySelectorAll(".filter-btn");
+            filterBtns.forEach(fBtn => {
+                fBtn.addEventListener("click", () => {
+                    filterBtns.forEach(fb => fb.classList.remove("active"));
+                    fBtn.classList.add("active");
+                    const continent = fBtn.getAttribute("data-continent");
+                    loadChannels(continent);
+                });
+            });
+        }
+
+        function loadChannels(continentFilter) {
+            const grid = document.getElementById("channels-grid");
+            grid.innerHTML = "";
+
+            let filtered = CHANNELS_DB;
+            if (continentFilter !== "all") {
+                filtered = CHANNELS_DB.filter(c => c.continent === continentFilter);
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="error-state">No hay canales disponibles para esta región por el momento.</div>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+
+            filtered.forEach(channel => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                    <div class="card-body">
+                        <span class="status-badge ${channel.status === 'online' ? '' : 'offline'}">
+                            <span class="status-dot"></span> ${channel.status === 'online' ? 'Disponible' : 'Sin señal'}
+                        </span>
+                        <div class="card-title">${channel.name}</div>
+                        <div class="card-subtitle">${channel.country}</div>
+                    </div>
+                `;
+                
+                card.addEventListener("click", () => playChannel(channel));
+                fragment.appendChild(card);
+            });
+
+            grid.appendChild(fragment);
+        }
+
+        function playChannel(channel) {
+            const video = document.getElementById("video-player");
+            const wrapper = document.getElementById("player-wrapper");
+            
+            wrapper.classList.add("active");
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (currentHls) {
+                currentHls.destroy();
+                currentHls = null;
+            }
+
+            if (Hls.isSupported()) {
+                const hls = new Hls({
+                    xhrSetup: function (xhr, url) {
+                        xhr.withCredentials = false;
+                    }
+                });
+                currentHls = hls;
+                hls.loadSource(channel.url);
+                hls.attachMedia(video);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play().catch(e => console.log("Autoplay bloqueado:", e));
+                });
+                
+                hls.on(Hls.Events.ERROR, (event, data) => {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                stopVideoPlayer();
+                                alert(`No se pudo establecer conexión con ${channel.name}. La señal puede estar temporalmente inactiva.`);
+                                break;
+                        }
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = channel.url;
+                video.addEventListener('loadedmetadata', () => {
+                    video.play().catch(e => console.log(e));
+                });
+            } else {
+                alert("Tu navegador no soporta la reproducción de video HLS.");
+            }
+        }
+
+        function stopVideoPlayer() {
+            const video = document.getElementById("video-player");
+            const wrapper = document.getElementById("player-wrapper");
+            video.pause();
+            video.removeAttribute('src');
+            video.load();
+            if (currentHls) {
+                currentHls.destroy();
+                currentHls = null;
+            }
+            wrapper.classList.remove("active");
+        }
+
+        function loadCatalog() {
+            const catalogGrid = document.getElementById("catalog-grid");
+            catalogGrid.innerHTML = "";
+
+            const fragment = document.createDocumentFragment();
+
+            CATALOG_DB.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                    <div class="card-body">
+                        <div class="card-title">${item.name}</div>
+                        <div class="card-subtitle" style="margin-bottom: 1rem;">${item.desc}</div>
+                        <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="btn-action" style="text-align: center; justify-content: center;">Visitar Sitio Legal ↗</a>
+                    </div>
+                `;
+                fragment.appendChild(card);
+            });
+
+            catalogGrid.appendChild(fragment);
+        }
+    </script>
+</body>
+</html>
