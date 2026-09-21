@@ -1,0 +1,22 @@
+{
+  "name": "LAHM TV — Televisión en vivo",
+  "short_name": "LAHM TV",
+  "description": "Aplicación oficial de televisión pública global en vivo. Desarrollada por Luis Alonso Herra Miranda.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0d10",
+  "theme_color": "#0a0d10",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "https://placeholder.com",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://placeholder.com",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
